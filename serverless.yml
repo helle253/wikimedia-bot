@@ -37,12 +37,12 @@ provider:
             "dynamodb:GetItem",
             "dynamodb:PutItem"
           ]
-          Resource: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/wikimedia_bot
+          Resource: { "Fn::Sub": "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/wikimedia_bot" }
         - Effect: "Allow"
           Action: [
             "ssm:GetParameter"
           ]
-          Resource: arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/wikimedia_bot/*
+          Resource: { "Fn::Sub": "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/wikimedia_bot/*" }
 
 # you can define service wide environment variables here
 #  environment:

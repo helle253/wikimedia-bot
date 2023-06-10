@@ -1,6 +1,5 @@
 from mastodon import Mastodon
 import requests
-import os
 from typing import Dict, Union
 from boto3 import client
 

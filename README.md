@@ -1,14 +1,15 @@
 ### Virtualenv install
 ```bash
   python -m pip install --user virtualenv
-  source ./bin/venv/bin/activate
+  python -m venv .venv
+  source ./.venv/bin/activate
 ```
 ### serverless install
 ```bash
   npm install -g serverless
 ```
 ### Configuring AWS Credentials
-TODO
+See [AWS Docs](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for details
 
 ### Deploying
 ```bash

@@ -1,7 +1,7 @@
 from mastodon import Mastodon
 import requests
 import os
-from typing import Dict
+from typing import Dict, Union
 
 from aws_helpers.dynamodb import DynamoDBWrapper
 
@@ -27,13 +27,14 @@ def make_request(req):
   else:
     raise Exception('Something went wrong!')
 
-def find_non_posted_image(results) -> None | any:
+def find_non_posted_image(results) -> Union[None, any]:
   '''
     Returns nothing if all the results have already been posted. 
     Otherwise, returns the id and title of an image that has not been posted.
   '''
   for result in results:
-    if dynamodb.is_already_posted(result['id']):
+    print(result)
+    if dynamodb.is_already_posted(result['pageid']):
       next
     else:
       return result
@@ -88,9 +89,9 @@ def post(file_data: bytes) -> None:
   media_id = mastodon.media_post(file_data, 'image')['id']
   mastodon.status_post('', media_ids=[media_id])
 
-def lambda_handler(_):
+def lambda_handler(_, __):
   file = find_file_details()
   url = get_file_url(file['title'])
   image_data  = get_image_data(url)
-  dynamodb.record_post_to_table(file['id'], file['title'])
+  dynamodb.record_post_to_table(file['pageid'], file['title'])
   post(image_data)

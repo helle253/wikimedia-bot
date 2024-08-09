@@ -1,4 +1,4 @@
-from helpers.fit_image_to_4096_px import fit_image_to_4096_px
+from helpers.image_resizing import fit_image_to_constraint
 from mastodon import Mastodon
 from boto3 import client
 
@@ -12,7 +12,7 @@ mastodon = Mastodon(
   api_base_url = mastodon_api_base_url,
 )
 
-def post_to_mastodon(image: bytes) -> None:
-  resized_image  = fit_image_to_4096_px(image)
+def post(image: bytes) -> None:
+  resized_image  = fit_image_to_constraint(image, 4096)
   media_id = mastodon.media_post(resized_image, 'image')['id']
   mastodon.status_post('', media_ids=[media_id])

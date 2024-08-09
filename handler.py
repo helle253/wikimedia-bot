@@ -3,9 +3,8 @@ from typing import Dict, Union
 from random import randrange
 from datetime import timedelta, datetime
 
-from helpers import post_to_mastodon, post_to_twitter
+from helpers import mastodon, twitter
 from helpers.dynamodb import DynamoDBWrapper
-from helpers.fit_image_to_4096_px import fit_image_to_4096_px
 
 dynamodb = DynamoDBWrapper()
 
@@ -89,8 +88,8 @@ def get_image(url: str) -> bytes:
   return resp.content;
 
 def post(image: bytes) -> None:
-  post_to_mastodon(image)
-  post_to_twitter(image)
+  mastodon.post(image)
+  twitter.post(image)
 
 def handler(_, __):
   file = get_random_image_details()

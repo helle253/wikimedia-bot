@@ -13,7 +13,7 @@ mastodon-py = "^1.8.1"
 requests = "^2.32.3"
 pillow = "^10.4.0"
 poetry-plugin-export = "^1.8.0"
-python-twitter = "^3.5"
+tweepy = "^4.14.0"
 
 
 [build-system]

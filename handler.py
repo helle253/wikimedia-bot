@@ -80,20 +80,12 @@ def get_file_url(file_title: str) -> str:
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=request).json()
   return list(result['query']['pages'].values())[0]['imageinfo'][0]['url']
 
-def get_image(url: str) -> bytes:
-  headers = {'User-Agent': 'Wikimedia Bot' }
-  resp = requests.get(url, headers=headers)
-  if resp.status_code != 200:
-      raise Exception('Something went wrong downloading the file!')
-  return resp.content;
-
-def post(image: bytes) -> None:
-  mastodon.post(image)
-  twitter.post(image)
+def post(url: str) -> None:
+  mastodon.post(url)
+  twitter.post(url)
 
 def handler(_, __):
   file = get_random_image_details()
   url = get_file_url(file['title'])
-  image = get_image(url)
   dynamodb.record_post_to_table(file['pageid'], file['title'])
-  post(image)
+  post(url)

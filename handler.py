@@ -5,6 +5,7 @@ from boto3 import client
 from random import randrange
 from datetime import timedelta, datetime
 
+from helpers import post_to_mastodon, post_to_twitter
 from helpers.dynamodb import DynamoDBWrapper
 from helpers.fit_image_to_4096_px import fit_image_to_4096_px
 
@@ -92,20 +93,20 @@ def get_file_url(file_title: str) -> str:
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=request).json()
   return list(result['query']['pages'].values())[0]['imageinfo'][0]['url']
 
-def get_image_data(url: str) -> bytes:
+def get_image(url: str) -> bytes:
   headers = {'User-Agent': 'Wikimedia Bot' }
   resp = requests.get(url, headers=headers)
   if resp.status_code != 200:
       raise Exception('Something went wrong downloading the file!')
   return resp.content;
 
-def post(file_data: bytes) -> None:
-  media_id = mastodon.media_post(file_data, 'image')['id']
-  mastodon.status_post('', media_ids=[media_id])
+def post(image: bytes) -> None:
+  post_to_mastodon(image)
+  post_to_twitter(image)
 
 def handler(_, __):
   file = get_random_image_details()
   url = get_file_url(file['title'])
-  image_data  = fit_image_to_4096_px(get_image_data(url))
+  image = get_image(url)
   dynamodb.record_post_to_table(file['pageid'], file['title'])
-  post(image_data)
+  post(image)

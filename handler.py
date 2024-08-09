@@ -2,12 +2,14 @@ from mastodon import Mastodon
 import requests
 import os
 from typing import Dict, Union
+from boto3 import client
 
 from helpers.dynamodb import DynamoDBWrapper
 from helpers.fit_image_to_4096_px import fit_image_to_4096_px
 
-mastodon_access_key = os.getenv('MASTODON_ACCESS_KEY')
-mastodon_api_base_url = os.getenv('MASTODON_BASE_URL')
+ssm = client('ssm')
+mastodon_access_key = ssm.get_parameter(Name='/wikimedia_bot/mastodon_access_key')['Parameter']['Value']
+mastodon_api_base_url = ssm.get_parameter(Name='/wikimedia_bot/mastodon_base_url')['Parameter']['Value']
 
 #   Set up Mastodon
 mastodon = Mastodon(
@@ -43,7 +45,7 @@ def find_non_posted_image(results) -> Union[None, any]:
 
 ##
 # Returns a title and an ID, which can be used to query for the image itself.
-def find_file_details() -> Dict[str, int]:
+def get_random_image_details() -> Dict[str, int]:
   request = {
     'action': 'query',
     'format': 'json',
@@ -90,12 +92,12 @@ def post(file_data: bytes) -> None:
   media_id = mastodon.media_post(file_data, 'image')['id']
   mastodon.status_post('', media_ids=[media_id])
 
-def make_post():
-  file = find_file_details()
+def handler(_, __):
+  file = get_random_image_details()
   url = get_file_url(file['title'])
   image_data  = fit_image_to_4096_px(get_image_data(url))
   dynamodb.record_post_to_table(file['pageid'], file['title'])
   post(image_data)
 
 if __name__ == "__main__":
-    make_post()
+    handler()

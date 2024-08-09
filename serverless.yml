@@ -37,7 +37,12 @@ provider:
             "dynamodb:GetItem",
             "dynamodb:PutItem"
           ]
-          Resource: arn:aws:dynamodb:us-west-2:${env:ACCOUNT_ID}:table/wikimedia_bot
+          Resource: arn:aws:dynamodb:us-east-2:${env:ACCOUNT_ID}:table/wikimedia_bot
+        - Effect: "Allow"
+          Action: [
+            "ssm:GetParameter"
+          ]
+          Resource: arn:aws:ssm:us-east-2:${env:ACCOUNT_ID}:parameter/wikimedia_bot/*
 
 # you can define service wide environment variables here
 #  environment:
@@ -55,7 +60,7 @@ package:
 
 functions:
   makePost:
-    handler: handler.make_post
+    handler: handler.handler
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details

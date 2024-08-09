@@ -7,8 +7,8 @@ from helpers.dynamodb import DynamoDBWrapper
 from helpers.fit_image_to_4096_px import fit_image_to_4096_px
 
 ssm = client('ssm')
-mastodon_access_key = ssm.get_parameter(Name='/wikimedia_bot/mastodon_access_key')['Parameter']['Value']
-mastodon_api_base_url = ssm.get_parameter(Name='/wikimedia_bot/mastodon_base_url')['Parameter']['Value']
+mastodon_access_key = ssm.get_parameter(Name='/wikimedia_bot/mastodon/access_key')['Parameter']['Value']
+mastodon_api_base_url = ssm.get_parameter(Name='/wikimedia_bot/mastodon/base_url')['Parameter']['Value']
 
 #   Set up Mastodon
 mastodon = Mastodon(

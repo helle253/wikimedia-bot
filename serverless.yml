@@ -51,7 +51,7 @@ provider:
 # you can add packaging information here
 package:
   patterns:
-    - '!venv/**'
+    - '!.venv/**'
 #  patterns:
 #    - '!exclude-me.py'
 #    - '!exclude-me-dir/**'

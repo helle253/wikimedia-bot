@@ -2,6 +2,8 @@ from mastodon import Mastodon
 import requests
 from typing import Dict, Union
 from boto3 import client
+from random import randrange
+from datetime import timedelta, datetime
 
 from helpers.dynamodb import DynamoDBWrapper
 from helpers.fit_image_to_4096_px import fit_image_to_4096_px
@@ -41,6 +43,14 @@ def find_non_posted_image(results) -> Union[None, any]:
     else:
       return result
 
+def random_time(
+    start=datetime(2011,3,8,13),
+    end=(datetime.now() - timedelta(weeks=4))
+):
+  delta = end - start
+  int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+  random_second = randrange(int_delta)
+  return start + timedelta(seconds=random_second)
 
 ##
 # Returns a title and an ID, which can be used to query for the image itself.
@@ -51,7 +61,9 @@ def get_random_image_details() -> Dict[str, int]:
     'list': 'categorymembers',
     'cmtype': 'file',
     'cmtitle': 'Category:Quality_images',
-    'cmlimit': 'max',
+    'cmstart': random_time(),
+    'cmsort': 'timestamp',
+    'cmdir': 'ascending',
   };
   lastContinue = {}
   while (True):

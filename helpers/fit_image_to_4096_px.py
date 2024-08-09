@@ -3,7 +3,7 @@ import io
 import math
 
 def fit_image_to_4096_px(image_data: bytes) -> bytes:
-  img = Image.frombytes(image_data)
+  img = Image.open(io.BytesIO(image_data))
 
   if (img.height > 4096 and img.height > img.width):
     return resize_on_height(img)

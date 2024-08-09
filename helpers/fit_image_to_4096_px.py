@@ -16,11 +16,15 @@ def resize_on_width(img: Image) -> Image:
 
 def fit_image_to_4096_px(image_data: bytes) -> bytes:
   img = Image.open(io.BytesIO(image_data))
+  format = img.format
+  fb = io.BytesIO()
 
   if (img.height > 4096 and img.height > img.width):
-    return resize_on_height(img).tobytes()
+    resize_on_height(img).save(fb, format=format)
+    return fb.getvalue()
   elif (img.width > 4096):
-    return resize_on_width(img).tobytes()
+    resize_on_width(img).save(fb, format=format)
+    return fb.getvalue()
   else:
     # do nothing
     return image_data

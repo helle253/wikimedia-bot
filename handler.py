@@ -3,7 +3,8 @@ import requests
 import os
 from typing import Dict, Union
 
-from aws_helpers.dynamodb import DynamoDBWrapper
+from helpers.dynamodb import DynamoDBWrapper
+from helpers.fit_image_to_4096_px import fit_image_to_4096_px
 
 mastodon_access_key = os.getenv('MASTODON_ACCESS_KEY')
 mastodon_api_base_url = os.getenv('MASTODON_BASE_URL')
@@ -89,9 +90,12 @@ def post(file_data: bytes) -> None:
   media_id = mastodon.media_post(file_data, 'image')['id']
   mastodon.status_post('', media_ids=[media_id])
 
-def lambda_handler(_, __):
+def make_post():
   file = find_file_details()
   url = get_file_url(file['title'])
-  image_data  = get_image_data(url)
+  image_data  = fit_image_to_4096_px(get_image_data(url))
   dynamodb.record_post_to_table(file['pageid'], file['title'])
   post(image_data)
+
+if __name__ == "__main__":
+    make_post()

@@ -35,7 +35,7 @@ def _find_non_posted_image(results) -> Union[None, any]:
 
 ##
 # Returns a title and an ID, which can be used to query for the image itself.
-def get_random_image_details() -> Dict[str, int]:
+def get_random_image() -> Dict[str, int]:
   request = {
     'action': 'query',
     'format': 'json',

@@ -36,7 +36,7 @@ def get_image(url: str) -> Image:
   return Image.open(io.BytesIO(resp.content));
 
 def to_bytes(image: Image) -> bytes:
-  format = image.format
+  format = image.format or 'JPEG'
   image_data = io.BytesIO()
   print(format)
   image.save(image_data, format=format)

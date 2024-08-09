@@ -7,7 +7,7 @@ from helpers import dynamodb
 
 dynamodb = dynamodb.DynamoDBWrapper()
 
-def random_time(
+def _random_time(
     start=datetime(2011,3,8,13),
     end=(datetime.now() - timedelta(weeks=4))
 ):
@@ -16,7 +16,7 @@ def random_time(
   random_second = randrange(int_delta)
   return start + timedelta(seconds=random_second)
 
-def make_request(req):
+def _make_request(req):
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=req).json()
   if 'error' in result:
     raise Exception(result['error'])
@@ -28,7 +28,7 @@ def make_request(req):
     raise Exception('Something went wrong!')
 
 
-def find_non_posted_image(results) -> Union[None, any]:
+def _find_non_posted_image(results) -> Union[None, any]:
   '''
     Returns nothing if all the results have already been posted.
     Otherwise, returns the id and title of an image that has not been posted.
@@ -49,7 +49,7 @@ def get_random_image_details() -> Dict[str, int]:
     'list': 'categorymembers',
     'cmtype': 'file',
     'cmtitle': 'Category:Quality_images',
-    'cmstart': random_time(),
+    'cmstart': _random_time(),
     'cmsort': 'timestamp',
     'cmdir': 'ascending',
   };
@@ -60,10 +60,10 @@ def get_random_image_details() -> Dict[str, int]:
     # Modify it with the values returned in the 'continue' section of the last result.
     req.update(lastContinue)
     # Call API
-    result = make_request(req)
+    result = _make_request(req)
     if 'query' in result:
       results = result['query']['categorymembers']
-      fresh_result = find_non_posted_image(results)
+      fresh_result = _find_non_posted_image(results)
       if fresh_result:
         return fresh_result
     lastContinue = result['continue']

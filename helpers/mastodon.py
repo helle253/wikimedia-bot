@@ -16,5 +16,5 @@ def post(url: str) -> None:
   image = get_image(url)
   resized_image  = fit_image_to_constraint(image, 4096)
   image_bytes = to_bytes(resized_image)
-  media_id = mastodon.media_post(image_bytes, 'image')['id']
+  media_id = mastodon.media_post(image_bytes, 'image', 'an image description')['id']
   mastodon.status_post('', media_ids=[media_id])

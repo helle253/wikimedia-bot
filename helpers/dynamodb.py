@@ -13,14 +13,12 @@ class DynamoDBWrapper:
     Returns:
         None
     """
-    current_time = datetime.now()
-    formatted_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
     self.dynamo_client.put_item(
       TableName=self.table_name,
       Item={
         "file_id": { 'S': str(file_id) },
         "title": { 'S': title },
-        "posted_at": { 'S': formatted_time }
+        "posted_at": { 'S': datetime.now().isoformat() }
       }
     )
 

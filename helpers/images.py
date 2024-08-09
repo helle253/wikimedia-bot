@@ -38,5 +38,6 @@ def get_image(url: str) -> Image:
 def to_bytes(image: Image) -> bytes:
   format = image.format
   image_data = io.BytesIO()
+  print(format)
   image.save(image_data, format=format)
   return image_data.getvalue()

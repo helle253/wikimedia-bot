@@ -33,10 +33,10 @@ def get_image(url: str) -> Image:
 
   if resp.status_code != 200:
       raise Exception('Something went wrong downloading the file!')
-  return Image.open(resp.content);
+  return Image.open(io.BytesIO(resp.content));
 
 def to_bytes(image: Image) -> bytes:
   format = image.format
   image_data = io.BytesIO()
   image.save(image_data, format=format)
-  return bytes.getvalue()
+  return image_data.getvalue()

@@ -11,6 +11,12 @@
 ### Configuring AWS Credentials
 See [AWS Docs](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for details
 
+### Parameter Store
+The following parameter store keys need to be populated:
+- /wikimedia_bot/mastodon_access_key
+- /wikimedia_bot/mastodon_base_url
+- /wikimedia_bot/table_name
+
 ### Deploying
 ```bash
   aws configure --profile $PROFILE_IN_CREDENTIALS_FILE

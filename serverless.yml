@@ -60,6 +60,7 @@ package:
 
 functions:
   makePost:
+    timeout: 60
     handler: handler.handler
     events:
       - schedule: rate(20 minutes)

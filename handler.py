@@ -1,23 +1,11 @@
-from mastodon import Mastodon
 import requests
 from typing import Dict, Union
-from boto3 import client
 from random import randrange
 from datetime import timedelta, datetime
 
 from helpers import post_to_mastodon, post_to_twitter
 from helpers.dynamodb import DynamoDBWrapper
 from helpers.fit_image_to_4096_px import fit_image_to_4096_px
-
-ssm = client('ssm')
-mastodon_access_key = ssm.get_parameter(Name='/wikimedia_bot/mastodon/access_key')['Parameter']['Value']
-mastodon_api_base_url = ssm.get_parameter(Name='/wikimedia_bot/mastodon/base_url')['Parameter']['Value']
-
-#   Set up Mastodon
-mastodon = Mastodon(
-  access_token = mastodon_access_key,
-  api_base_url = mastodon_api_base_url,
-)
 
 dynamodb = DynamoDBWrapper()
 

@@ -3,9 +3,7 @@ from typing import Dict, Union
 from random import randrange
 from datetime import timedelta, datetime
 
-from helpers import dynamodb
-
-dynamodb = dynamodb.DynamoDBWrapper()
+# dynamodb = dynamodb.DynamoDBWrapper()
 
 def _random_time(
     start=datetime(2011,3,8,13),
@@ -33,12 +31,7 @@ def _find_non_posted_image(results) -> Union[None, any]:
     Returns nothing if all the results have already been posted.
     Otherwise, returns the id and title of an image that has not been posted.
   '''
-  for result in results:
-    print(result)
-    if dynamodb.is_already_posted(result['pageid']):
-      next
-    else:
-      return result
+  return results[0]
 
 ##
 # Returns a title and an ID, which can be used to query for the image itself.
@@ -69,7 +62,7 @@ def get_random_image_details() -> Dict[str, int]:
     lastContinue = result['continue']
 
 
-def get_file_url(file_title: str) -> str:
+def get_file_details(file_title: str) -> Dict[str, any]:
   request = {
     'action': 'query',
     'format': 'json',
@@ -78,4 +71,6 @@ def get_file_url(file_title: str) -> str:
     'iiprop': 'url',
   };
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=request).json()
-  return list(result['query']['pages'].values())[0]['imageinfo'][0]['url']
+  result_list = list(result['query']['pages'].values())
+  print(result_list)
+  return result_list[0]['imageinfo'][0]

@@ -1,6 +1,9 @@
+from typing import Dict
 from helpers.images import fit_image_to_constraint, get_image, to_bytes
 from mastodon import Mastodon
 from boto3 import client
+
+from helpers.wikimedia import get_file_details
 
 ssm = client('ssm')
 mastodon_access_key = ssm.get_parameter(Name='/wikimedia_bot/mastodon/access_key')['Parameter']['Value']
@@ -12,9 +15,9 @@ mastodon = Mastodon(
   api_base_url = mastodon_api_base_url,
 )
 
-def post(url: str) -> None:
-  image = get_image(url)
+def post(file: Dict[str, any]) -> None:
+  details = get_file_details(file['title'])
+  image = get_image(details['url'])
   resized_image  = fit_image_to_constraint(image, 4096)
-  image_bytes = to_bytes(resized_image)
-  media_id = mastodon.media_post(image_bytes, 'image', 'an image description')['id']
+  media_id = mastodon.media_post(to_bytes(resized_image), 'image', description=details['descriptionurl'])['id']
   mastodon.status_post('', media_ids=[media_id])

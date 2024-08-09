@@ -1,6 +1,5 @@
 from boto3 import client
 from datetime import datetime
-import os
 
 class DynamoDBWrapper:
   def __init__(self):

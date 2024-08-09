@@ -33,7 +33,7 @@ def make_request(req):
 
 def find_non_posted_image(results) -> Union[None, any]:
   '''
-    Returns nothing if all the results have already been posted. 
+    Returns nothing if all the results have already been posted.
     Otherwise, returns the id and title of an image that has not been posted.
   '''
   for result in results:
@@ -109,6 +109,3 @@ def handler(_, __):
   image_data  = fit_image_to_4096_px(get_image_data(url))
   dynamodb.record_post_to_table(file['pageid'], file['title'])
   post(image_data)
-
-if __name__ == "__main__":
-    handler()

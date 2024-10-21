@@ -1,5 +1,5 @@
 
-from typing import Dict, Union
+from typing import Dict
 
 from helpers import mastodon, twitter
 from helpers.dynamodb import DynamoDBWrapper

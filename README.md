@@ -18,6 +18,14 @@ The following parameter store keys need to be populated:
 - /wikimedia_bot/twitter/access_token_secret
 - /wikimedia_bot/table_name
 
+### Twitter Setup
+
+You'll have to create a Twitter Project and generate API keys and access tokens. See [Twitter Docs](https://developer.twitter.com/en/docs/authentication/oauth-1-0a) for details.
+
+### Mastodon Setup
+
+Create a new Mastodon App, with read/write privileges. See [Mastodon Docs](https://docs.joinmastodon.org/methods/apps/) for details.
+
 ### OIDC
 
 To configure automated deployments, you will also need to configure Github secrets for the AWS_DEPLOY_ROLE.

@@ -33,4 +33,4 @@ class DynamoDBWrapper:
 
     # If there is a matching item, this field is present.
     # If there is no matching item, this field is absent.
-    return 'Item' in response;
+    return 'Item' in response

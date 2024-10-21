@@ -33,7 +33,7 @@ def get_image(url: str) -> Image:
 
   if resp.status_code != 200:
       raise Exception('Something went wrong downloading the file!')
-  return Image.open(io.BytesIO(resp.content));
+  return Image.open(io.BytesIO(resp.content))
 
 def to_bytes(image: Image) -> bytes:
   format = image.format or 'JPEG'

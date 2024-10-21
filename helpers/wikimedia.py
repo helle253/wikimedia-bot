@@ -45,7 +45,7 @@ def get_random_image() -> Dict[str, int]:
     'cmstart': _random_time(),
     'cmsort': 'timestamp',
     'cmdir': 'ascending',
-  };
+  }
   lastContinue = {}
   while (True):
     # Clone original request
@@ -69,7 +69,7 @@ def get_file_details(file_title: str) -> Dict[str, any]:
     'titles': [file_title],
     'prop': 'imageinfo',
     'iiprop': 'url',
-  };
+  }
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=request).json()
   result_list = list(result['query']['pages'].values())
   print(result_list)

@@ -16,8 +16,12 @@ mastodon = Mastodon(
 )
 
 def post(file: Dict[str, any]) -> None:
-  details = get_file_details(file['title'])
-  image = get_image(details['url'])
-  resized_image  = fit_image_to_constraint(image, 4096)
-  media_id = mastodon.media_post(to_bytes(resized_image), 'image', description=details['descriptionurl'])['id']
-  mastodon.status_post('', media_ids=[media_id])
+  try:
+    details = get_file_details(file['title'])
+    image = get_image(details['url'])
+    resized_image  = fit_image_to_constraint(image, 4096)
+    media_id = mastodon.media_post(to_bytes(resized_image), 'image', description=details['descriptionurl'])['id']
+    mastodon.status_post('', media_ids=[media_id])
+  except Exception as e:
+    print('Error posting to Mastodon')
+    print(e)

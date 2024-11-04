@@ -31,8 +31,8 @@ functions:
     timeout: 60
     handler: handler.handler
     events:
-      # Invoke Lambda function once an hour
-      - schedule: rate(1 hour)
+      # Invoke Lambda function once every 8 hours
+      - schedule: rate(8 hours)
 
 plugins:
   - serverless-python-requirements

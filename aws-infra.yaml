@@ -1,0 +1,134 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Wikimedia Bot AWS Cloudformation Template
+Resources:
+  DeploymentBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+  DeploymentBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref DeploymentBucket
+      PolicyDocument:
+        Statement:
+          - Action: s3:*
+            Effect: Deny
+            Principal: "*"
+            Resource:
+              - !Join
+                - ""
+                - - "arn:"
+                  - !Ref AWS::Partition
+                  - ":s3:::"
+                  - !Ref DeploymentBucket
+                  - /*
+              - !Join
+                - ""
+                - - "arn:"
+                  - !Ref AWS::Partition
+                  - ":s3:::"
+                  - !Ref DeploymentBucket
+            Condition:
+              Bool:
+                aws:SecureTransport: false
+  MakePostLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/wikimedia-bot-dev-makePost
+  IamRoleLambdaExecution:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: !Join
+            - "-"
+            - - wikimedia-bot
+              - dev
+              - lambda
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:CreateLogGroup
+                  - logs:TagResource
+                Resource:
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/wikimedia-bot-dev*:*
+              - Effect: Allow
+                Action:
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/wikimedia-bot-dev*:*:*
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/wikimedia_bot
+              - Effect: Allow
+                Action:
+                  - ssm:GetParameter
+                Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/wikimedia_bot/*
+      Path: /
+      RoleName: !Join
+        - "-"
+        - - wikimedia-bot
+          - dev
+          - !Ref AWS::Region
+          - lambdaRole
+  MakePostLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref DeploymentBucket
+        S3Key: wikimedia-bot/wikimedia-bot.zip
+      Handler: handler.handler
+      Runtime: python3.11
+      FunctionName: wikimedia-bot-dev-makePost
+      MemorySize: 1024
+      Timeout: 60
+      Role: !GetAtt IamRoleLambdaExecution.Arn
+    DependsOn:
+      - MakePostLogGroup
+  MakePostLambdaVersionh7gm9obkQcZaYVZ1APV9HDGHLbz8q6DjvBKaGCo0ks0:
+    Type: AWS::Lambda::Version
+    DeletionPolicy: Retain
+    Properties:
+      FunctionName: !Ref MakePostLambdaFunction
+      CodeSha256: JGqcyriVYSrl3t5nB4neadOFi/cRrk7sLdtMNbPPmXk=
+  MakePostEventsRuleSchedule1:
+    Type: AWS::Events::Rule
+    Properties:
+      ScheduleExpression: rate(8 hours)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt MakePostLambdaFunction.Arn
+          Id: makePostSchedule
+  MakePostLambdaPermissionEventsRuleSchedule1:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt MakePostLambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt MakePostEventsRuleSchedule1.Arn
+Outputs:
+  DeploymentBucketName:
+    Value: !Ref DeploymentBucket
+    Export:
+      Name: sls-wikimedia-bot-dev-DeploymentBucketName
+  MakePostLambdaFunctionQualifiedArn:
+    Description: Current Lambda function version
+    Value: !Ref MakePostLambdaVersionh7gm9obkQcZaYVZ1APV9HDGHLbz8q6DjvBKaGCo0ks0
+    Export:
+      Name: sls-wikimedia-bot-dev-MakePostLambdaFunctionQualifiedArn

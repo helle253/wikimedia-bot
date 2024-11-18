@@ -4248,10 +4248,10 @@ semver@^7.3.5, semver@^7.3.7, semver@^7.3.8, semver@^7.5.3, semver@^7.6.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.6.3.tgz#980f7b5550bc175fb4dc09403085627f9eb33143"
   integrity sha512-oVekP1cKtI+CTDvHWYFUcMtsK/00wmAEfyqKfNdARm8u1wNVhSgaX7A8d4UuIlUI5e84iEwOhs7ZPYRmzU9U6A==
 
-serverless-python-requirements@^6.0.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/serverless-python-requirements/-/serverless-python-requirements-6.1.0.tgz#197cebfc8bb0890d980b8bfcf6b9be8380b92d34"
-  integrity sha512-+cgHLXT7AnjAiOXF/lIuw9RWz7GrgTmgpq8FijzKuahEMzcK5J1p+8odiX0V3zMm4CWpFBxQrcCcGaq2zmw8dA==
+serverless-python-requirements@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/serverless-python-requirements/-/serverless-python-requirements-6.1.1.tgz#f7da9f2e0f096387e25f0d4e54baca7bfc1ad97b"
+  integrity sha512-SQsDKjoZXWvRJNsKL7NvHiMM+B6kG0a4RkVexhPCxId/rVMLVyz0UHg7v34kzaklfsXTQIkez+9x7HP3FwdRVQ==
   dependencies:
     "@iarna/toml" "^2.2.5"
     appdirectory "^0.1.0"
@@ -4270,7 +4270,7 @@ serverless-python-requirements@^6.0.0:
     sha256-file "1.0.0"
     shell-quote "^1.8.1"
 
-serverless@^3.38.0:
+serverless@^3.39.0:
   version "3.39.0"
   resolved "https://registry.yarnpkg.com/serverless/-/serverless-3.39.0.tgz#699fbea4d0b0ba0baba0510be743f9d025ac363d"
   integrity sha512-FHI3fhe4TRS8+ez/KA7HmO3lt3fAynO+N1pCCzYRThMWG0J8RWCI0BI+K0mw9+sEV+QpBCpZRZbuGyUaTsaQew==

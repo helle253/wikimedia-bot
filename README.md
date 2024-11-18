@@ -10,6 +10,8 @@ You'll need a dynamoDB table to run this bot - configure it and record the table
 
 The following parameter store keys need to be populated:
 
+- /wikimedia_bot/bluesky/username
+- /wikimedia_bot/bluesky/password
 - /wikimedia_bot/mastodon/access_key
 - /wikimedia_bot/mastodon/base_url
 - /wikimedia_bot/twitter/api_key

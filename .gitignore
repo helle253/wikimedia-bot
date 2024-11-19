@@ -1,19 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
 .env
 .venv/
+
 # Distribution / packaging
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
+dist/*
+!dist/lambda
+dist/lambda/*
+!dist/lambda/.keep
 *.egg-info/
-.installed.cfg
-*.egg
+requirements.txt

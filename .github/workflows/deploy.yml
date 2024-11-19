@@ -17,25 +17,36 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: 3.11
-      - name: install poetry
-        uses: abatilo/actions-poetry@v3
+      - uses: abatilo/actions-poetry@v3
         with:
           poetry-version: 1.8.3
-      - name: Configure AWS credentials
-        id: aws-credentials
-        uses: aws-actions/configure-aws-credentials@v4
+
+      - name: Build Lambda package
+        run: |
+          poetry export --without-hashes --output dist/lambda/requirements.txt
+          pip install -r dist/lambda/requirements.txt --target dist/lambda
+          cp -r src/* dist/lambda/
+          cd dist/lambda && zip -r ../function.zip .
+
+      - uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
           aws-region: us-east-1
-      - name: Deploy
+
+      - name: Deploy Cfn Stack
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: wikimedia-bot-cfn-deploy
-          template: ./aws-infra.yaml
-          no-fail-on-empty-changeset: "1"
+          name: wikimedia-bot
+          template: aws-infra.yaml
+          no-fail-on-empty-changeset: 1
+
+      - name: Update Lambda function code
+        run: |
+          aws lambda update-function-code \
+            --function-name wikimedia-bot \
+            --zip-file fileb://dist/function.zip
 

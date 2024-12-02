@@ -32,6 +32,8 @@ functions:
   makePost:
     timeout: 60
     handler: dist/handler.handler
+    layers:
+      - arn:aws:lambda:${aws:region}:553035198032:layer:sharp:1
     events:
       # Invoke Lambda function once every 8 hours
       - schedule: rate(8 hours)

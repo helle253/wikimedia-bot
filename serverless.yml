@@ -4,7 +4,7 @@ frameworkVersion: "3"
 
 provider:
   name: aws
-  runtime: python3.11
+  runtime: nodejs20.x
 
   iam:
     role:
@@ -25,14 +25,21 @@ provider:
 package:
   patterns:
     - "!node_modules/**"
+    - "!src/**"
+    - "dist/**"
 
 functions:
   makePost:
     timeout: 60
-    handler: handler.handler
+    handler: dist/handler.handler
     events:
       # Invoke Lambda function once every 8 hours
       - schedule: rate(8 hours)
 
 plugins:
-  - serverless-python-requirements
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    bundle: true
+    minify: true

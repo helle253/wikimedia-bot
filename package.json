@@ -1,17 +1,27 @@
 {
   "name": "wikimedia-bot",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
-  "repository": {
-    "type": "git",
-    "url": "git@github.com-personal:helle253/wikimedia-bot.git"
+  "description": "posts random wikimedia images to social media",
+  "main": "dist/handler.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/handler.js",
+    "deploy": "yarn build && serverless deploy"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.470.0",
+    "@aws-sdk/client-ssm": "^3.470.0",
+    "axios": "^1.7.8",
+    "date-fns": "^4.1.0",
+    "masto": "^6.10.1",
+    "sharp": "^0.33.0",
+    "twitter-api-v2": "^1.15.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "esbuild": "^0.24.0",
     "serverless": "^3.39.0",
-    "serverless-python-requirements": "^6.1.1"
+    "serverless-esbuild": "^1.48.4",
+    "typescript": "^5.3.3"
   }
 }

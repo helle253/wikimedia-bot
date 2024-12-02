@@ -19,24 +19,23 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set Node.js 20.x
+
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
-      - name: install yarn dependencies
-        run: yarn install
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.11
-      - name: install poetry
-        uses: abatilo/actions-poetry@v3
-        with:
-          poetry-version: 1.8.3
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build
+        run: yarn build
+
       - name: Configure AWS credentials
-        id: aws-credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE }}
           aws-region: us-east-1
-      - name: Deploy
-        run: yarn serverless deploy
+      - name: Deploy to production
+        run: yarn deploy

@@ -19,11 +19,11 @@ client = tweepy.Client(consumer_key=consumer_key, consumer_secret=consumer_secre
 def post(file: Dict[str, any]) -> None:
   try:
     details = get_file_details(file['title'])
-    description_url = details['descriptionurl']
+    alt_text = details['extmetadata']['ImageDescription']['value']
     image = get_image(details['url'])
     resized_image  = fit_image_to_constraint(image, 2048)
     media_upload = api.simple_upload(f'image.{image.format}', file=to_bytes(resized_image))
-    api.create_media_metadata(media_upload.media_id, alt_text=description_url)
+    api.create_media_metadata(media_upload.media_id, alt_text=alt_text)
     client.create_tweet(media_ids=[media_upload.media_id])
   except Exception as e:
     print('Error posting to Twitter')

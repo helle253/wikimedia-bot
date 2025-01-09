@@ -68,7 +68,7 @@ def get_file_details(file_title: str) -> Dict[str, any]:
     'format': 'json',
     'titles': [file_title],
     'prop': 'imageinfo',
-    'iiprop': 'url',
+    'iiprop': 'extmetadata|url',
   }
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=request).json()
   result_list = list(result['query']['pages'].values())

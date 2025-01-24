@@ -1,3 +1,4 @@
+import re
 import tweepy
 from boto3 import client
 from typing import Dict
@@ -20,6 +21,7 @@ def post(file: Dict[str, any]) -> None:
   try:
     details = get_file_details(file['title'])
     alt_text = details['extmetadata']['ImageDescription']['value']
+    alt_text = re.sub('<[^<]+?>', '', alt_text)
     image = get_image(details['url'])
     resized_image  = fit_image_to_constraint(image, 2048)
     media_upload = api.simple_upload(f'image.{image.format}', file=to_bytes(resized_image))

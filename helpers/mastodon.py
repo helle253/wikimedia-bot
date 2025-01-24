@@ -1,3 +1,4 @@
+import re
 from typing import Dict
 from helpers.images import fit_image_to_constraint, get_image, to_bytes
 from mastodon import Mastodon
@@ -20,6 +21,7 @@ def post(file: Dict[str, any]) -> None:
     details = get_file_details(file['title'])
     image = get_image(details['url'])
     alt_text = details['extmetadata']['ImageDescription']['value']
+    alt_text = re.sub('<[^<]+?>', '', alt_text)
     resized_image  = fit_image_to_constraint(image, 4096)
     media_id = mastodon.media_post(to_bytes(resized_image), 'image', description=alt_text)['id']
     mastodon.status_post('', media_ids=[media_id])

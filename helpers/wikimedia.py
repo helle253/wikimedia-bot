@@ -1,9 +1,11 @@
 import requests
-from typing import Dict, Union
+from typing import Dict, Union, Any
 from random import randrange
 from datetime import timedelta, datetime
 
-# dynamodb = dynamodb.DynamoDBWrapper()
+from helpers.dynamodb import DynamoDBWrapper
+
+dynamodb = DynamoDBWrapper()
 
 def _random_time(
     start=datetime(2011,3,8,13),
@@ -26,12 +28,15 @@ def _make_request(req):
     raise Exception('Something went wrong!')
 
 
-def _find_non_posted_image(results) -> Union[None, any]:
+def _find_non_posted_image(results) -> Union[None, Any]:
   '''
     Returns nothing if all the results have already been posted.
     Otherwise, returns the id and title of an image that has not been posted.
   '''
-  return results[0]
+  for result in results:
+    if not dynamodb.is_already_posted(result['pageId']):
+      return result
+  return None
 
 ##
 # Returns a title and an ID, which can be used to query for the image itself.

@@ -34,7 +34,7 @@ def _find_non_posted_image(results) -> Union[None, Any]:
     Otherwise, returns the id and title of an image that has not been posted.
   '''
   for result in results:
-    if not dynamodb.is_already_posted(result['pageId']):
+    if not dynamodb.is_already_posted(result['pageid']):
       return result
   return None
 

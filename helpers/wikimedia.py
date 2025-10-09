@@ -14,7 +14,9 @@ def _random_time(
   delta = end - start
   int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
   random_second = randrange(int_delta)
-  return start + timedelta(seconds=random_second)
+  random_datetime = start + timedelta(seconds=random_second)
+  # Format as ISO 8601 timestamp for the Wikimedia API
+  return random_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 def _make_request(req):
   result = requests.get('https://commons.wikimedia.org/w/api.php', params=req).json()
@@ -47,24 +49,34 @@ def get_random_image() -> Dict[str, int]:
     'list': 'categorymembers',
     'cmtype': 'file',
     'cmtitle': 'Category:Quality_images',
-    'cmstart': _random_time(),
     'cmsort': 'timestamp',
     'cmdir': 'ascending',
   }
-  lastContinue = {}
   while (True):
-    # Clone original request
-    req = request.copy()
-    # Modify it with the values returned in the 'continue' section of the last result.
-    req.update(lastContinue)
-    # Call API
-    result = _make_request(req)
-    if 'query' in result:
-      results = result['query']['categorymembers']
-      fresh_result = _find_non_posted_image(results)
-      if fresh_result:
-        return fresh_result
-    lastContinue = result['continue']
+    # Set a new random start time for each attempt
+    request['cmstart'] = _random_time()
+    lastContinue = {}
+
+    # Paginate through results from this random start time
+    while (True):
+      # Clone original request
+      req = request.copy()
+      # Modify it with the values returned in the 'continue' section of the last result.
+      req.update(lastContinue)
+      # Call API
+      result = _make_request(req)
+      if 'query' in result:
+        results = result['query']['categorymembers']
+        fresh_result = _find_non_posted_image(results)
+        if fresh_result:
+          return fresh_result
+
+      # If there's a continue token, keep paginating
+      if 'continue' in result:
+        lastContinue = result['continue']
+      else:
+        # No more pages from this random start time, break to try a new random time
+        break
 
 
 def get_file_details(file_title: str) -> Dict[str, any]:

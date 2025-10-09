@@ -1,4 +1,4 @@
-from helpers import mastodon, twitter
+from helpers import bluesky, mastodon, twitter
 from helpers.dynamodb import DynamoDBWrapper
 from helpers.wikimedia import get_random_image
 
@@ -6,6 +6,7 @@ dynamodb = DynamoDBWrapper()
 
 
 def post(file: dict[str, any]) -> None:
+    bluesky.post(file)
     mastodon.post(file)
     twitter.post(file)
 

@@ -29,6 +29,50 @@ def fit_image_to_constraint(image: Image, constraint=4096) -> Image:
         return image
 
 
+def fit_image_to_filesize(
+    image: Image, max_size_mb: float, quality_step: int = 2
+) -> Image:
+    """
+    Resize image to fit within a maximum file size in MB.
+    Uses iterative quality reduction and dimension scaling if needed.
+    """
+    format = image.format or "JPEG"
+
+    current_image = image.copy()
+    quality = 95
+
+    while quality > 75:
+        image_data = io.BytesIO()
+        current_image.save(image_data, format=format, quality=quality)
+        size_mb = len(image_data.getvalue()) / (1024 * 1024)
+
+        if size_mb <= max_size_mb:
+            return current_image
+
+        quality -= quality_step
+
+    scale_factor = 0.9
+    for _ in range(20):
+        new_width = math.floor(current_image.width * scale_factor)
+        new_height = math.floor(current_image.height * scale_factor)
+
+        if new_width < 400 or new_height < 400:
+            return current_image
+
+        current_image = image.resize((new_width, new_height))
+
+        image_data = io.BytesIO()
+        current_image.save(image_data, format=format, quality=85)
+        size_mb = len(image_data.getvalue()) / (1024 * 1024)
+
+        if size_mb <= max_size_mb:
+            return current_image
+
+        scale_factor -= 0.05
+
+    return current_image
+
+
 def get_image(url: str) -> Image:
     headers = {"User-Agent": "Wikimedia Bot"}
     resp = requests.get(url, headers=headers)

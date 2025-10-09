@@ -19,7 +19,10 @@ def _random_time(
   return random_datetime.strftime('%Y-%m-%dT%H:%M:%SZ')
 
 def _make_request(req):
-  result = requests.get('https://commons.wikimedia.org/w/api.php', params=req).json()
+  headers = {
+    'User-Agent': 'WikimediaBot/1.0 (https://github.com/helle253/wikimedia-bot; nathan@example.com) python-requests'
+  }
+  result = requests.get('https://commons.wikimedia.org/w/api.php', params=req, headers=headers).json()
   if 'error' in result:
     raise Exception(result['error'])
   if 'warnings' in result:
@@ -87,7 +90,10 @@ def get_file_details(file_title: str) -> Dict[str, any]:
     'prop': 'imageinfo',
     'iiprop': 'extmetadata|url',
   }
-  result = requests.get('https://commons.wikimedia.org/w/api.php', params=request).json()
+  headers = {
+    'User-Agent': 'WikimediaBot/1.0 (https://github.com/helle253/wikimedia-bot; nathan@example.com) python-requests'
+  }
+  result = requests.get('https://commons.wikimedia.org/w/api.php', params=request, headers=headers).json()
   result_list = list(result['query']['pages'].values())
   print(result_list)
   return result_list[0]['imageinfo'][0]

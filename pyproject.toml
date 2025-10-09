@@ -7,7 +7,8 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11,<3.12"
+atproto = "^0.0.62"
 boto3 = "^1.35.64"
 mastodon-py = "^2.1.4"
 requests = "^2.32.3"

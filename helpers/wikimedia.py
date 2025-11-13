@@ -9,9 +9,8 @@ from helpers.dynamodb import DynamoDBWrapper
 dynamodb = DynamoDBWrapper()
 
 
-def _random_time(
-    start=datetime(2011, 3, 8, 13), end=(datetime.now() - timedelta(weeks=4))
-):
+def _random_time(start=datetime(2011, 3, 8, 13), end=None) -> str:
+    end = end or (datetime.now() - timedelta(weeks=4))
     delta = end - start
     int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
     random_second = randrange(int_delta)
@@ -22,7 +21,9 @@ def _random_time(
 
 def _make_request(req):
     headers = {
-        "User-Agent": "WikimediaBot/1.0 (https://github.com/helle253/wikimedia-bot; nathan@example.com) python-requests"
+        "User-Agent": "WikimediaBot/1.0 "
+        + "(https://github.com/helle253/wikimedia-bot; nathanhellbhoy@gmail.com) "
+        + "python-requests"
     }
     result = requests.get(
         "https://commons.wikimedia.org/w/api.php", params=req, headers=headers
@@ -69,7 +70,8 @@ def get_random_image() -> dict[str, int]:
         while True:
             # Clone original request
             req = request.copy()
-            # Modify it with the values returned in the 'continue' section of the last result.
+            # Modify it with the values returned in
+            # the 'continue' section of the last result.
             req.update(lastContinue)
             # Call API
             result = _make_request(req)
@@ -83,7 +85,8 @@ def get_random_image() -> dict[str, int]:
             if "continue" in result:
                 lastContinue = result["continue"]
             else:
-                # No more pages from this random start time, break to try a new random time
+                # No more pages from this random start time,
+                # break to try a new random time
                 break
 
 
@@ -96,7 +99,9 @@ def get_file_details(file_title: str) -> dict[str, any]:
         "iiprop": "extmetadata|url",
     }
     headers = {
-        "User-Agent": "WikimediaBot/1.0 (https://github.com/helle253/wikimedia-bot; nathan@example.com) python-requests"
+        "User-Agent": "WikimediaBot/1.0 "
+        + "(https://github.com/helle253/wikimedia-bot; nathanhellbhoy@gmail.com) "
+        + "python-requests"
     }
     result = requests.get(
         "https://commons.wikimedia.org/w/api.php", params=request, headers=headers

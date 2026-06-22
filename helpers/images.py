@@ -80,6 +80,7 @@ def get_image(url: str) -> Image:
     print(f"downloading {url}")
 
     if resp.status_code != 200:
+        print(f"Failed to download {url}: HTTP {resp.status_code} - {resp.text[:500]}")
         raise Exception("Something went wrong downloading the file!")
     return Image.open(io.BytesIO(resp.content))
 

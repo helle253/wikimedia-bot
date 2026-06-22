@@ -1,10 +1,7 @@
-import re
-
 import tweepy
 from boto3 import client
 
-from helpers.images import fit_image_to_constraint, get_image, to_bytes
-from helpers.wikimedia import get_file_details
+from helpers.images import fit_image_to_constraint, to_bytes
 
 ssm = client("ssm")
 consumer_key = ssm.get_parameter(Name="/wikimedia_bot/twitter/api_key")["Parameter"][
@@ -32,12 +29,8 @@ client = tweepy.Client(
 )
 
 
-def post(file: dict[str, any]) -> None:
+def post(image, alt_text: str) -> None:
     try:
-        details = get_file_details(file["title"])
-        alt_text = details["extmetadata"]["ImageDescription"]["value"]
-        alt_text = re.sub("<[^<]+?>", "", alt_text)
-        image = get_image(details["url"])
         resized_image = fit_image_to_constraint(image, 2048)
         media_upload = api.simple_upload(
             f"image.{image.format}", file=to_bytes(resized_image)

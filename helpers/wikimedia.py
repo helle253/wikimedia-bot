@@ -60,7 +60,7 @@ def get_random_image() -> dict[str, int]:
         "cmtitle": "Category:Quality_images",
         "cmsort": "timestamp",
         "cmdir": "ascending",
-        "cmlimit": 500,
+        "cmlimit": "max",
     }
     while True:
         # Set a new random start time for each attempt

@@ -1,3 +1,12 @@
+# Setup
+
+Install [Mise](https://mise.jdx.dev/installing-mise.html)
+
+```sh
+mise install
+poetry install
+```
+
 # Configuring AWS Credentials
 
 See [AWS Docs](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html) for details

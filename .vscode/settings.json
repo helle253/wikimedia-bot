@@ -1,7 +1,5 @@
 {
-  "python-envs.defaultEnvManager": "ms-python.python:poetry",
-  "python-envs.defaultPackageManager": "ms-python.python:poetry",
-  "python-envs.pythonProjects": [],
+  "python.terminal.activateEnvironment": false,
   "[python]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "charliermarsh.ruff",

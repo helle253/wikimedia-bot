@@ -4,6 +4,8 @@ import math
 import requests
 from PIL import Image
 
+from helpers.http import wikimedia_headers
+
 
 def _resize_on_height(img: Image, max_height: int) -> Image:
     ratio = max_height / img.height
@@ -74,8 +76,7 @@ def fit_image_to_filesize(
 
 
 def get_image(url: str) -> Image:
-    headers = {"User-Agent": "Wikimedia Bot"}
-    resp = requests.get(url, headers=headers)
+    resp = requests.get(url, headers=wikimedia_headers())
 
     print(f"downloading {url}")
 

@@ -5,6 +5,7 @@ from typing import Any
 import requests
 
 from helpers.dynamodb import DynamoDBWrapper
+from helpers.http import wikimedia_headers
 
 dynamodb = DynamoDBWrapper()
 
@@ -20,13 +21,10 @@ def _random_time(start=datetime(2011, 3, 8, 13), end=None) -> str:
 
 
 def _make_request(req):
-    headers = {
-        "User-Agent": "WikimediaBot/1.0 "
-        + "(https://github.com/helle253/wikimedia-bot; nathanhellbhoy@gmail.com) "
-        + "python-requests"
-    }
     result = requests.get(
-        "https://commons.wikimedia.org/w/api.php", params=req, headers=headers
+        "https://commons.wikimedia.org/w/api.php",
+        params=req,
+        headers=wikimedia_headers(),
     ).json()
     if "error" in result:
         raise Exception(result["error"])
@@ -99,13 +97,10 @@ def get_file_details(file_title: str) -> dict[str, any]:
         "prop": "imageinfo",
         "iiprop": "extmetadata|url",
     }
-    headers = {
-        "User-Agent": "WikimediaBot/1.0 "
-        + "(https://github.com/helle253/wikimedia-bot; nathanhellbhoy@gmail.com) "
-        + "python-requests"
-    }
     result = requests.get(
-        "https://commons.wikimedia.org/w/api.php", params=request, headers=headers
+        "https://commons.wikimedia.org/w/api.php",
+        params=request,
+        headers=wikimedia_headers(),
     ).json()
     result_list = list(result["query"]["pages"].values())
     print(result_list)

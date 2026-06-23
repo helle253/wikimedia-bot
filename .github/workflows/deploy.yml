@@ -27,7 +27,7 @@ jobs:
         run: yarn install
       - uses: actions/setup-python@v6
         with:
-          python-version: 3.11
+          python-version: 3.13
       - name: install poetry
         uses: abatilo/actions-poetry@v4
         with:

@@ -8,11 +8,11 @@ package-mode = false
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.12"
-atproto = "^0.0.62"
+atproto = "0.0.68"
 boto3 = "^1.35.64"
 mastodon-py = "^2.1.4"
-requests = "^2.32.3"
-pillow = "^11.3.0"
+requests = "2.34.2"
+pillow = "12.2.0"
 tweepy = "^4.14.0"
 
 [build-system]
@@ -25,13 +25,13 @@ target-version = "py313"
 
 [tool.ruff.lint]
 select = [
-    "E",   # pycodestyle errors
-    "W",   # pycodestyle warnings
-    "F",   # pyflakes
-    "I",   # isort
-    "B",   # flake8-bugbear
-    "C4",  # flake8-comprehensions
-    "UP",  # pyupgrade
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
 ]
 ignore = []
 

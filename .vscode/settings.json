@@ -12,4 +12,5 @@
   },
   "ruff.enable": true,
   "ruff.lint.enable": true,
+  "python.analysis.autoImportCompletions": true,
 }

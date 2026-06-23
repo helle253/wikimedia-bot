@@ -8,7 +8,7 @@
     "type": "git",
     "url": "git@github.com-personal:helle253/wikimedia-bot.git"
   },
-  "author": "",
+  "author": "nathanhellbhoy@gmail.com",
   "license": "ISC",
   "dependencies": {
     "serverless": "^3.39.0",

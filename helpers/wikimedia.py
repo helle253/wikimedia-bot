@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-from random import randrange
 from typing import Any
 
 import requests
@@ -8,16 +6,6 @@ from helpers.dynamodb import DynamoDBWrapper
 from helpers.http import wikimedia_headers
 
 dynamodb = DynamoDBWrapper()
-
-
-def _random_time(start=datetime(2011, 3, 8, 13), end=None) -> str:
-    end = end or (datetime.now() - timedelta(weeks=4))
-    delta = end - start
-    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
-    random_second = randrange(int_delta)
-    random_datetime = start + timedelta(seconds=random_second)
-    # Format as ISO 8601 timestamp for the Wikimedia API
-    return random_datetime.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _make_request(req):
@@ -53,40 +41,22 @@ def get_random_image() -> dict[str, int]:
     request = {
         "action": "query",
         "format": "json",
-        "list": "categorymembers",
-        "cmtype": "file",
-        "cmtitle": "Category:Quality_images",
-        "cmsort": "timestamp",
-        "cmdir": "ascending",
-        "cmlimit": "max",
+        "list": "search",
+        "srsearch": 'incategory:"Quality images"',
+        "srnamespace": "6",  # File namespace
+        "srsort": "random",
+        "srlimit": "max",
     }
     while True:
-        # Set a new random start time for each attempt
-        request["cmstart"] = _random_time()
-        lastContinue = {}
+        result = _make_request(request)
+        results = result["query"]["search"]
 
-        # Paginate through results from this random start time
-        while True:
-            # Clone original request
-            req = request.copy()
-            # Modify it with the values returned in
-            # the 'continue' section of the last result.
-            req.update(lastContinue)
-            # Call API
-            result = _make_request(req)
-            if "query" in result:
-                results = result["query"]["categorymembers"]
-                fresh_result = _find_non_posted_image(results)
-                if fresh_result:
-                    return fresh_result
-
-            # If there's a continue token, keep paginating
-            if "continue" in result:
-                lastContinue = result["continue"]
-            else:
-                # No more pages from this random start time,
-                # break to try a new random time
-                break
+        for result in results:
+            if not dynamodb.is_already_posted(result["pageid"]):
+                return {
+                    "pageid": result["pageid"],
+                    "title": result["title"],
+                }
 
 
 def get_file_details(file_title: str) -> dict[str, any]:
